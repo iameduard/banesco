@@ -1,0 +1,40 @@
+SELECT 
+SUBSTR(dtetim,1,8) as FechaHora, 
+sum(intsec) as Intervalo,
+ROUND(sum(SCPU01)/sum(intsec*1000) ,3) as UtilCPU1,
+ROUND(sum(SCPU02)/sum(intsec*1000) ,3) as UtilCPU2,
+ROUND(sum(SCPU03)/sum(intsec*1000) ,3) as UtilCPU3,
+ROUND(sum(SCPU04)/sum(intsec*1000) ,3) as UtilCPU4,
+ROUND(sum(SCPU05)/sum(intsec*1000) ,3) as UtilCPU5,
+ROUND(sum(SCPU06)/sum(intsec*1000) ,3) as UtilCPU6,
+ROUND(sum(SCPU07)/sum(intsec*1000) ,3) as UtilCPU7,
+ROUND(sum(SCPU08)/sum(intsec*1000) ,3) as UtilCPU8,
+ROUND(sum(SCPU09)/sum(intsec*1000) ,3) as UtilCPU9,
+ROUND(sum(SCPU10)/sum(intsec*1000),3) as UtilCPU010,
+ROUND(sum(SCPU11)/sum(intsec*1000),3) as UtilCPU011,
+ROUND(sum(SCPU12)/sum(intsec*1000),3) as UtilCPU012,
+ROUND(sum(SCPU13)/sum(intsec*1000),3) as UtilCPU013,
+ROUND(sum(SCPU14)/sum(intsec*1000),3) as UtilCPU014,
+ROUND(sum(SCPU15)/sum(intsec*1000),3) as UtilCPU015,
+ROUND(sum(SCPU16)/sum(intsec*1000),3) as UtilCPU016,
+ROUND(sum(SCPU17)/sum(intsec*1000),3) as UtilCPU017,
+ROUND(sum(SCPU18)/sum(intsec*1000),3) as UtilCPU018,
+ROUND(sum(SCPU19)/sum(intsec*1000),3) as UtilCPU019,
+ROUND(sum(SCPU20)/sum(intsec*1000),3) as UtilCPU020,
+ROUND(sum(SCPU21)/sum(intsec*1000),3) as UtilCPU021,
+ROUND(sum(SCPU22)/sum(intsec*1000),3) as UtilCPU022,
+ROUND(sum(SCPU23)/sum(intsec*1000),3) as UtilCPU023,
+ROUND(sum(SCPU24)/sum(intsec*1000),3) as UtilCPU024,
+ROUND(sum(SCPU25)/sum(intsec*1000),3) as UtilCPU025,
+ROUND(sum(SCPU26)/sum(intsec*1000),3) as UtilCPU026,
+ROUND(sum(SCPU27)/sum(intsec*1000),3) as UtilCPU027,
+ROUND(sum(SCPU28)/sum(intsec*1000),3) as UtilCPU028,
+ROUND(sum(SCPU29)/sum(intsec*1000),3) as UtilCPU029,
+ROUND(sum(SCPU30)/sum(intsec*1000),3) as UtilCPU030,
+ROUND(sum(SCPU31)/sum(intsec*1000),3) as UtilCPU031,
+ROUND(sum(SCPU32)/sum(intsec*1000),3) as UtilCPU032
+from AS400CPUTILXPRCIBS
+group by SUBSTR(dtetim,1,8)
+order by SUBSTR(dtetim,1,8);
+
+SELECT * FROM AS400CPUTILXPRCIBS;

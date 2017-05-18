@@ -1,0 +1,121 @@
+DELETE FROM BOD_COMPE_MET WHERE OBJETO IN ('LATENCIA');
+
+SELECT COUNT(TS) FROM BOD_COMPE_MET
+WHERE OBJETO IN ('MEMORIA');
+
+SELECT 
+COUNT(TS) TIMESTAMP,
+COUNT(DURATION) DURATION,
+COUNT(ID_DEVICE) ID_DEVICE,
+COUNT(DS_SYSNM) DS_SYSNM,
+COUNT(RESPONSE_TIME) RESPONSE_TIME,
+COUNT(STYPE) STYPE,
+COUNT(MEN_UTIL) MEN_UTIL,
+COUNT(NSIZE) NSIZE,
+COUNT(DS_SUSNM_DISPOSITIVO) DS_SUSNM_DISPOSITIVO,
+COUNT(SNETWORK_ADDRESS) SNETWORK_ADDRESS,
+COUNT(DS_SUBOBJNAME) DS_SUBOBJNAME,
+COUNT(SLFPHYSADDRESS)SLFPHYSADDRESS,
+COUNT(BYTEIN) AS BYTEIN,
+COUNT(BYTEOUT) BYTEOUT,
+COUNT(SPEEDEIN) SPEEDEIN,
+COUNT(SPEEDOUT) SPEEDOUT
+FROM BOD_COMPE_MET
+WHERE OBJETO IN ('TRAFICO');
+
+SELECT 
+OBJETO,
+DS_SYSNM,
+DS_SUSNM_DISPOSITIVO,
+ID_DEVICE,
+case when substr(TS,1,3)='116' then substr(TS,2,2) else substr(replace(TS,'/2016','/16'),7,2)  end yy,
+case when substr(TS,1,3)='116' then substr(TS,4,2) else substr(TS,1,2)  end mm,
+case when substr(TS,1,3)='116' then substr(TS,6,2) else substr(TS,4,2)  end dd,
+case when substr(TS,1,3)='116' then substr(TS,8,2) else substr(replace(TS,'/2016','/16'),10,2)  end hh,
+ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY MEN_UTIL),2) P95_MEN_UTIL,
+ROUND(AVG(MEN_UTIL),2) AVG_MEN_UTIL,
+ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY NSIZE),2) P95_NSIZE,
+ROUND(AVG(NSIZE),2) AVG_NSIZE,
+ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY MEN_UTIL/NSIZE),4)*100 P95_UTILZ_MEM,
+ROUND(AVG(MEN_UTIL/NSIZE),4)*100 AVG_UTILIZ_MEM
+FROM BOD_COMPE_MET
+WHERE OBJETO IN ('MEMORIA')
+GROUP BY
+OBJETO,
+DS_SYSNM,
+DS_SUSNM_DISPOSITIVO,
+ID_DEVICE,
+case when substr(TS,1,3)='116' then substr(TS,2,2) else substr(replace(TS,'/2016','/16'),7,2)  end,
+case when substr(TS,1,3)='116' then substr(TS,4,2) else substr(TS,1,2)  end ,
+case when substr(TS,1,3)='116' then substr(TS,6,2) else substr(TS,4,2)  end ,
+case when substr(TS,1,3)='116' then substr(TS,8,2) else substr(replace(TS,'/2016','/16'),10,2)  end 
+ORDER BY YY,MM;
+
+
+SELECT 
+OBJETO,
+DS_SYSNM,
+DS_SUSNM_DISPOSITIVO,
+ID_DEVICE,
+case when substr(TS,1,3)='116' then substr(TS,2,2) else substr(replace(TS,'/2016','/16'),7,2)  end yy,
+case when substr(TS,1,3)='116' then substr(TS,4,2) else substr(TS,1,2)  end mm,
+--case when substr(TS,1,3)='116' then substr(TS,6,2) else substr(TS,4,2)  end dd,
+--case when substr(TS,1,3)='116' then substr(TS,8,2) else substr(replace(TS,'/2016','/16'),10,2)  end hh,
+ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY RESPONSE_TIME),2) P95_RESPONSE_TIME,
+ROUND(AVG(RESPONSE_TIME),2) AVG_RESPONSE_TIME
+FROM BOD_COMPE_MET
+WHERE OBJETO IN ('LATENCIA')
+GROUP BY
+OBJETO,
+DS_SYSNM,
+DS_SUSNM_DISPOSITIVO,
+ID_DEVICE,
+case when substr(TS,1,3)='116' then substr(TS,2,2) else substr(replace(TS,'/2016','/16'),7,2)  end,
+case when substr(TS,1,3)='116' then substr(TS,4,2) else substr(TS,1,2)  end 
+--case when substr(TS,1,3)='116' then substr(TS,6,2) else substr(TS,4,2)  end 
+--case when substr(TS,1,3)='116' then substr(TS,8,2) else substr(replace(TS,'/2016','/16'),10,2)  end 
+ORDER BY YY,MM;
+
+
+SELECT 
+OBJETO,
+DS_SYSNM,
+DS_SUSNM_DISPOSITIVO,
+ID_DEVICE,
+SNETWORK_ADDRESS,
+DS_SUBOBJNAME,
+SLFPHYSADDRESS,
+case when substr(TS,1,3)='116' then substr(TS,2,2) else substr(replace(TS,'/2016','/16'),7,2)  end yy,
+case when substr(TS,1,3)='116' then substr(TS,4,2) else substr(TS,1,2)  end mm,
+--case when substr(TS,1,3)='116' then substr(TS,6,2) else substr(TS,4,2)  end dd,
+--case when substr(TS,1,3)='116' then substr(TS,8,2) else substr(replace(TS,'/2016','/16'),10,2)  end hh,
+ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY BYTEIN),2) P95_BYTEIN,
+ROUND(AVG(BYTEIN),2) AVG_BYTEIN,
+ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY BYTEOUT),2) P95_BYTEOUT,
+ROUND(AVG(BYTEOUT),2) AVG_BYTEOUT,
+ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY SPEEDEIN),2) P95_SPEEDEIN,
+ROUND(AVG(SPEEDEIN),2) AVG_SPEEDEIN,
+ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY SPEEDOUT),2) P95_SPEEDOUT,
+ROUND(AVG(SPEEDOUT),2) AVG_SPEEDOUT,
+ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY CASE WHEN SPEEDOUT > 0 THEN BYTEOUT/SPEEDOUT ELSE NULL END),6)*100 PCT_P95_UTIL_CANAL_OUT,
+ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY CASE WHEN SPEEDEIN > 0 THEN BYTEIN/SPEEDEIN ELSE NULL END),6)*100 PCT_P95_UTIL_CANAL_IN
+FROM BOD_COMPE_MET
+WHERE OBJETO IN ('TRAFICO')
+GROUP BY
+OBJETO,
+DS_SYSNM,
+DS_SUSNM_DISPOSITIVO,
+ID_DEVICE,
+SNETWORK_ADDRESS,
+DS_SUBOBJNAME,
+SLFPHYSADDRESS,
+case when substr(TS,1,3)='116' then substr(TS,2,2) else substr(replace(TS,'/2016','/16'),7,2)  end,
+case when substr(TS,1,3)='116' then substr(TS,4,2) else substr(TS,1,2)  end 
+--,
+--case when substr(TS,1,3)='116' then substr(TS,6,2) else substr(TS,4,2)  end 
+--,
+--case when substr(TS,1,3)='116' then substr(TS,8,2) else substr(replace(TS,'/2016','/16'),10,2)  end 
+ORDER BY YY,MM
+--,DD
+--,HH
+;
